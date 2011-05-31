@@ -2,7 +2,7 @@
 
 # Marx
 # Richard Mondello
-# Convenience script to turn Markdown into HTML or PDF
+# Markdown => (HTML | PDF) with CSS
 #
 # Dependencies:
 # * Ruby 1.8.7
@@ -20,27 +20,26 @@
 #     Marx.rb in.mdown out -f html
 
 # Constants
-FORMAT          = "pdf" # either "pdf" or "html"
-STYLESHEET      = nil   # style.css
-MARKDOWN_SCRIPT = "Markdown.pl"
-PDF_APP         = "wkhtmltopdf"
-ERROR_CODE      = 1
+FORMAT     = "pdf" # either "pdf" or "html"
+STYLESHEET = nil   # style.css
+MARKDOWN   = "Markdown.pl"
+PDF        = "wkhtmltopdf"
+ERROR_CODE = 1
 
-BANNER = "Usage: Marx.rb [options] input.mdown output.(pdf|html) [pdf options]"
-
+BANNER = "Usage: Marx.rb in.mdown out.(pdf|html) [options]"
 # Dependency check
 def prg_exists?(prg)
   `which #{prg}`
   $? == 0
 end
 
-unless prg_exists? MARKDOWN_SCRIPT
+unless prg_exists? MARKDOWN
   puts "Error: could not locate Markdown script"
   puts "http://daringfireball.net/projects/markdown/"
   exit ERROR_CODE
 end
 
-unless prg_exists? PDF_APP
+unless prg_exists? PDF
   puts "Error: could not locate html to pdf script"
   puts "http://code.google.com/p/wkhtmltopdf/"
   exit ERROR_CODE
@@ -54,7 +53,7 @@ options = {}
 optparse = OptionParser.new do |opts|
   opts.banner = BANNER
 
-  options[:stylesheet] = nil
+  options[:stylesheet] = STYLESHEET
   opts.on( '-s', '--stylesheet file', 'use file as stylesheet' ) do |file|
     options[:stylesheet] = file
   end
@@ -81,7 +80,7 @@ end
 begin
   optparse.parse!
 rescue => e
-  e.recover(ARGV)
+  e.recover(ARGV) # put rejected arguments back
 end
 
 # Output format inference
@@ -102,7 +101,7 @@ temp   = Tempfile.new 'Marx'
 temp2  = Tempfile.new 'Marx'
 
 # check for stylesheet
-`#{MARKDOWN_SCRIPT} #{input} > #{temp.path}`
+`#{MARKDOWN} #{input} > #{temp.path}`
 
 if options[:stylesheet]
   stylesheet = File.expand_path options[:stylesheet]
@@ -113,7 +112,7 @@ end
 if /(htm|html)/i.match options[:format]
   `mv #{temp.path} #{output}`
 elsif /(pdf)/i.match options[:format]
-  `cat #{temp.path} | #{PDF_APP} #{ARGV.join ' '} - - > #{output}`
+  `cat #{temp.path} | #{PDF} #{ARGV.join ' '} - - > #{output}`
 else
   puts "Error: No output format specified."
   exit ERROR_CODE
