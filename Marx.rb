@@ -5,7 +5,7 @@
 # Convenience script to turn Markdown into HTML or PDF
 #
 # Dependencies:
-# * Ruby 1.9.2
+# * Ruby 1.8.7
 # * Markdown.pl (http://daringfireball.net/projects/markdown/)
 # * wkhtmltopdf (http://code.google.com/p/wkhtmltopdf/)
 #
