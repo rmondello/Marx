@@ -71,20 +71,18 @@ optparse = OptionParser.new do |opts|
   end
 end
 
-begin
-  optparse.parse!
-rescue
-  d = 3
-end
-
-input  = ARGV[0]
-output = ARGV[1]
+input  = ARGV.shift
+output = ARGV.shift
 unless input and output
   puts BANNER
   exit ERROR_CODE
 end
-options.delete 0
-options.delete 1
+
+begin
+  optparse.parse!
+rescue => e
+  e.recover(ARGV)
+end
 
 # Output format inference
 unless options[:format]           # -f (--format) flag overrides filename
@@ -98,10 +96,10 @@ unless options[:format]           # -f (--format) flag overrides filename
 end
 
 # Run scripts
-input  = File.expand_path ARGV[0]
-output = File.expand_path ARGV[1]
-temp   = Tempfile.new 'marx'
-temp2  = Tempfile.new 'marx'
+input  = File.expand_path input
+output = File.expand_path output
+temp   = Tempfile.new 'Marx'
+temp2  = Tempfile.new 'Marx'
 
 # check for stylesheet
 `#{MARKDOWN_SCRIPT} #{input} > #{temp.path}`
@@ -115,7 +113,7 @@ end
 if /(htm|html)/i.match options[:format]
   `mv #{temp.path} #{output}`
 elsif /(pdf)/i.match options[:format]
-  `cat #{temp.path} | #{PDF_APP} - - > #{output}`
+  `cat #{temp.path} | #{PDF_APP} #{ARGV.join ' '} - - > #{output}`
 else
   puts "Error: No output format specified."
   exit ERROR_CODE
