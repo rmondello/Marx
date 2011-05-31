@@ -8,19 +8,27 @@
 # * Ruby 1.9.2
 # * Markdown.pl (http://daringfireball.net/projects/markdown/)
 # * wkhtmltopdf (http://code.google.com/p/wkhtmltopdf/)
+#
+# Use:
+# * Markdown -> html
+#     Marx.rb in.mdown out.html
+# * Markdown -> pdf
+#     Marx.rb in.mdown out.pdf
+# * Custom stylesheet
+#     Marx.rb in.mdown out.pdf -s style.css
+# * Override file extension inference
+#     Marx.rb in.mdown out -f html
 
 # Constants
-
 FORMAT          = "pdf" # either "pdf" or "html"
 STYLESHEET      = nil   # style.css
 MARKDOWN_SCRIPT = "Markdown.pl"
 PDF_APP         = "wkhtmltopdf"
 ERROR_CODE      = 1
 
-BANNER = "Usage: Marx.rb [options] input output [pdf options]"
+BANNER = "Usage: Marx.rb [options] input.mdown output.(pdf|html) [pdf options]"
 
 # Dependency check
-
 def prg_exists?(prg)
   `which #{prg}`
   $? == 0
@@ -39,7 +47,6 @@ unless prg_exists? PDF_APP
 end
 
 # Options parsing
-
 require "optparse"
 require "tempfile"
 options = {}
@@ -53,7 +60,8 @@ optparse = OptionParser.new do |opts|
   end
   
   options[:format] = nil
-  opts.on( '-f', '--format fmt', 'html|pdf, overrides file extension inference' ) do |fmt|
+  opts.on( '-f', '--format fmt',
+                 'html|pdf, overrides file extension inference' ) do |fmt|
     options[:format] = fmt
   end
     
@@ -63,7 +71,11 @@ optparse = OptionParser.new do |opts|
   end
 end
 
-optparse.parse!
+begin
+  optparse.parse!
+rescue
+  d = 3
+end
 
 input  = ARGV[0]
 output = ARGV[1]
@@ -75,8 +87,7 @@ options.delete 0
 options.delete 1
 
 # Output format inference
-
-unless options[:format]           # --format flag overrides filename
+unless options[:format]           # -f (--format) flag overrides filename
   if /(.htm|.html)$/.match(output)
     options[:format] = "html"
   elsif /(.pdf$)/.match(output)
@@ -87,7 +98,6 @@ unless options[:format]           # --format flag overrides filename
 end
 
 # Run scripts
-
 input  = File.expand_path ARGV[0]
 output = File.expand_path ARGV[1]
 temp   = Tempfile.new 'marx'
@@ -106,7 +116,11 @@ if /(htm|html)/i.match options[:format]
   `mv #{temp.path} #{output}`
 elsif /(pdf)/i.match options[:format]
   `cat #{temp.path} | #{PDF_APP} - - > #{output}`
+else
+  puts "Error: No output format specified."
+  exit ERROR_CODE
 end
 
+# Clean up
 temp.close!
 temp2.close!
