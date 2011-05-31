@@ -28,22 +28,27 @@ A convenient way of publishing Markdown and CSS to a PDF using WebKit as the pri
 
 ### PDF Options
 
-Any arguments that Marx.rb doesn't recognize are passed to wkhtmltopdf. Here are some useful ones:
+Any arguments that Marx.rb doesn't recognize are passed to wkhtmltopdf. To see all of the options wkhtmltopdf supports, run:
 
-	      --collate                       Collate when printing multiple copies
-	                                      (default)
-	      --no-collate                    Do not collate when printing multiple
-	                                      copies
-	      --copies <number>               Number of copies to print into the pdf
-	                                      file (default 1)
-	  -g, --grayscale                     PDF will be generated in grayscale
-	  -l, --lowquality                    Generates lower quality pdf/ps. Useful to
-	                                      shrink the result document space
-	  -O, --orientation <orientation>     Set orientation to Landscape or Portrait
-	                                      (default Portrait)
-	  -s, --page-size <Size>              Set paper size to: A4, Letter, etc.
-	  -q, --quiet                         Be less verbose
-	      --title <text>                  The title of the generated pdf file (The
-	                                      title of the first document is used if not
-	                                      specified)
-	  -V, --version                       Output version information an exit
+	wkhtmltopdf -H
+
+For convenience, here are some useful ones:
+
+	-g, --grayscale                  PDF will be generated in grayscale
+	-l, --lowquality                 Generates lower quality pdf/ps. Useful to
+	                                 shrink the result document space
+	-O, --orientation <orientation>  Set orientation to Landscape or Portrait
+	                                 (default Portrait)
+	-s, --page-size <Size>           Set paper size to: A4, Letter, etc.
+	--title <text>                   The title of the generated pdf file (The
+	                                 title of the first document is used if not
+	                                 specified)
+	-B, --margin-bottom <unitreal>   Set the page bottom margin (default 10mm)
+	-L, --margin-left <unitreal>     Set the page left margin (default 10mm)
+	-R, --margin-right <unitreal>    Set the page right margin (default 10mm)
+	-T, --margin-top <unitreal>      Set the page top margin (default 10mm)
+	--background                     Do print background (default)
+    --no-background                  Do not print background
+    --images                         Do load or print images (default)
+    --no-images                      Do not load or print images
+    --zoom <float>                   Use this zoom factor (default 1)
