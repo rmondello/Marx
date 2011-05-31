@@ -1,6 +1,6 @@
 # Marx: Markdown & CSS => PDF using WebKit
 
-A convenient way of publishing Markdown and CSS to a PDF using WebKit as the printer.
+A convenient way of publishing Markdown and CSS to a PDF using WebKit as the printer. Huge shout-out to Jakob Truelsen and the fine people at wkhtmltopdf for making this possible.
 
 ### Install
 
