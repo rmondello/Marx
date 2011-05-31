@@ -2,22 +2,7 @@
 
 # Marx
 # Richard Mondello
-# Markdown => (HTML | PDF) with CSS
-#
-# Dependencies:
-# * Ruby 1.8.7
-# * Markdown.pl (http://daringfireball.net/projects/markdown/)
-# * wkhtmltopdf (http://code.google.com/p/wkhtmltopdf/)
-#
-# Use:
-# * Markdown -> html
-#     Marx.rb in.mdown out.html
-# * Markdown -> pdf
-#     Marx.rb in.mdown out.pdf
-# * Custom stylesheet
-#     Marx.rb in.mdown out.pdf -s style.css
-# * Override file extension inference
-#     Marx.rb in.mdown out -f html
+# https://github.com/rmondello/Marx
 
 # Constants
 FORMAT     = "pdf" # either "pdf" or "html"
@@ -112,7 +97,7 @@ end
 if /(htm|html)/i.match options[:format]
   `mv #{temp.path} #{output}`
 elsif /(pdf)/i.match options[:format]
-  `cat #{temp.path} | #{PDF} #{ARGV.join ' '} - - > #{output}`
+  `cat #{temp.path} | #{PDF} --page-size Letter #{ARGV.join ' '} - - > #{output}`
 else
   puts "Error: No output format specified."
   exit ERROR_CODE

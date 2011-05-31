@@ -1,16 +1,14 @@
-# Marx: Markdown + CSS => PDF using WebKit
+# Marx: Markdown & CSS => PDF using WebKit
 
-## Dependencies
+A convenient way of publishing Markdown and CSS to a PDF using WebKit as the printer.
 
-* Ruby 1.8.7
-* [Markdown.pl](http://daringfireball.net/projects/markdown/)
-* [wkhtmltopdf](http://code.google.com/p/wkhtmltopdf/)
+### Install
 
-## Install
+1. Add [Markdown.pl](http://daringfireball.net/projects/markdown/) to your PATH.
+2. Add [wkhtmltopdf](http://code.google.com/p/wkhtmltopdf/) to your PATH.
+3. Add Mark.rb to your PATH.
 
-Grab Markdown.pl and wkhtmltopdf. Put them in your PATH.
-
-## Use
+### Use
 
 * Markdown => html  
 
@@ -27,3 +25,25 @@ Grab Markdown.pl and wkhtmltopdf. Put them in your PATH.
 * Override file extension inference  
 
     Marx.rb in.mdown out -f html
+
+### PDF Options
+
+Any arguments that Marx.rb doesn't recognize are passed to wkhtmltopdf. Here are some useful ones:
+
+	      --collate                       Collate when printing multiple copies
+	                                      (default)
+	      --no-collate                    Do not collate when printing multiple
+	                                      copies
+	      --copies <number>               Number of copies to print into the pdf
+	                                      file (default 1)
+	  -g, --grayscale                     PDF will be generated in grayscale
+	  -l, --lowquality                    Generates lower quality pdf/ps. Useful to
+	                                      shrink the result document space
+	  -O, --orientation <orientation>     Set orientation to Landscape or Portrait
+	                                      (default Portrait)
+	  -s, --page-size <Size>              Set paper size to: A4, Letter, etc.
+	  -q, --quiet                         Be less verbose
+	      --title <text>                  The title of the generated pdf file (The
+	                                      title of the first document is used if not
+	                                      specified)
+	  -V, --version                       Output version information an exit
