@@ -80,11 +80,10 @@ unless options[:format]           # -f (--format) flag overrides filename
 end
 
 # Run scripts
-input  = File.expand_path input
-output = File.expand_path output
+input  = File.expand_path(input).gsub(/\s/, '\ ')
+output = File.expand_path(output).gsub(/\s/, '\ ')
 temp   = Tempfile.new 'Marx'
 temp2  = Tempfile.new 'Marx'
-
 # check for stylesheet
 `#{MARKDOWN} #{input} > #{temp.path}`
 
@@ -93,7 +92,6 @@ if options[:stylesheet]
   `cat #{stylesheet} #{temp.path} > #{temp2.path}`
   `mv #{temp2.path} #{temp.path}`
 end
-
 if /(htm|html)/i.match options[:format]
   `mv #{temp.path} #{output}`
 elsif /(pdf)/i.match options[:format]
@@ -102,6 +100,7 @@ else
   puts "Error: No output format specified."
   exit ERROR_CODE
 end
+
 
 # Clean up
 temp.close!
