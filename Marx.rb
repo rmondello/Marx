@@ -12,8 +12,9 @@ PDF        = "wkhtmltopdf"
 ERROR_CODE = 1
 
 BANNER = "Usage: Marx.rb in.mdown out.(pdf|html) [options]"
+
 # Dependency check
-def prg_exists?(prg)
+def prg_exists? (prg)
   `which #{prg}`
   $? == 0
 end
@@ -79,32 +80,41 @@ unless options[:format]           # -f (--format) flag overrides filename
   end
 end
 
-# Run scripts
+# Set up file paths
 input  = File.expand_path(input).gsub(/\s/, '\ ')
 output = File.expand_path(output).gsub(/\s/, '\ ')
-temp   = Tempfile.new 'Marx'
-temp2  = Tempfile.new 'Marx'
+style  = options[:stylesheet] ? File.expand_path(options[:stylesheet]).gsub(/\s/, '\ ') : nil
 
-# check for stylesheet
-`#{MARKDOWN} #{input} > #{temp.path}`
-
-# --user-style-sheet ../markdown.css
-
-if options[:stylesheet]
-  stylesheet = File.expand_path options[:stylesheet]
-  `cat #{stylesheet} #{temp.path} > #{temp2.path}`
-  `mv #{temp2.path} #{temp.path}`
+# File checks
+def file_check (path, type)
+  unless FileTest.exists?(path)
+    puts "Error: #{type} file not found: #{path}."
+    exit ERROR_CODE
+  end
 end
 
+file_check(input, "Input")
+file_check(style, "Stylesheet") if options[:stylesheet]
+
+# Prepare html
+style_data = style ? IO.read(style) : ""
+body_data = `#{MARKDOWN} #{input}`
+
+html_data = ["<html>\n<head>\n<style>\n" \
+            , style_data \
+            , "\n</style>\n</head>\n<body>\n" \
+            , body_data \
+            , "\n</body>\n</html>" \
+            ].join
+
+# Write proper output, whether html or pdf
 if /(htm|html)/i.match options[:format]
-  `mv #{temp.path} #{output}`
+  File.open(output, 'w') {|f| f.write(html_data) }
 elsif /(pdf)/i.match options[:format]
+  temp = Tempfile.new 'Marx'
+  File.open(temp.path, 'w') {|f| f.write(html_data) }
   `cat #{temp.path} | #{PDF} --page-size Letter #{ARGV.join ' '} - - > #{output}`
 else
   puts "Error: No output format specified."
   exit ERROR_CODE
 end
-
-# Clean up
-temp.close!
-temp2.close!
