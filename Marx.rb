@@ -88,6 +88,8 @@ temp2  = Tempfile.new 'Marx'
 # check for stylesheet
 `#{MARKDOWN} #{input} > #{temp.path}`
 
+# --user-style-sheet ../markdown.css
+
 if options[:stylesheet]
   stylesheet = File.expand_path options[:stylesheet]
   `cat #{stylesheet} #{temp.path} > #{temp2.path}`
