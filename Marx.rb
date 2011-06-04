@@ -80,8 +80,8 @@ unless options[:format]           # -f (--format) flag overrides filename
 end
 
 # Run scripts
-input  = File.expand_path input
-output = File.expand_path output
+input  = File.expand_path(input).gsub(/\s/, '\ ')
+output = File.expand_path(output).gsub(/\s/, '\ ')
 temp   = Tempfile.new 'Marx'
 temp2  = Tempfile.new 'Marx'
 
