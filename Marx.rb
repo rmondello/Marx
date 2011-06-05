@@ -81,14 +81,14 @@ unless options[:format]           # -f (--format) flag overrides filename
 end
 
 # Set up file paths
-input  = File.expand_path(input).gsub(/\s/, '\ ')
-output = File.expand_path(output).gsub(/\s/, '\ ')
-style  = options[:stylesheet] ? File.expand_path(options[:stylesheet]).gsub(/\s/, '\ ') : nil
+input  = File.expand_path(input)
+output = File.expand_path(output)
+style  = options[:stylesheet] ? File.expand_path(options[:stylesheet]) : nil
 
 # File checks
 def file_check (path, type)
   unless FileTest.exists?(path)
-    puts "Error: #{type} file not found: #{path}."
+    puts "Error: #{type} file not found: #{path}"
     exit ERROR_CODE
   end
 end
@@ -98,7 +98,7 @@ file_check(style, "Stylesheet") if options[:stylesheet]
 
 # Prepare html
 style_data = style ? IO.read(style) : ""
-body_data = `#{MARKDOWN} #{input}`
+body_data = `#{MARKDOWN} #{input.gsub(/\s/, '\ ')}`
 
 html_data = ["<html>\n<head>\n<style>\n" \
             , style_data \
@@ -109,12 +109,12 @@ html_data = ["<html>\n<head>\n<style>\n" \
 
 # Write proper output, whether html or pdf
 if /(htm|html)/i.match options[:format]
-  File.open(output, 'w') {|f| f.write(html_data) }
+  File.open(output, 'w') { |f| f.write(html_data) }
 elsif /(pdf)/i.match options[:format]
   temp = Tempfile.new 'Marx'
-  File.open(temp.path, 'w') {|f| f.write(html_data) }
-  `cat #{temp.path} | #{PDF} --page-size Letter #{ARGV.join ' '} - - > #{output}`
+  File.open(temp.path, 'w') { |f| f.write(html_data) }
+  `cat #{temp.path} | #{PDF} --page-size Letter #{ARGV.join ' '} - - > #{output.gsub(/\s/, '\ ')}`
 else
-  puts "Error: No output format specified."
+  puts "Error: No output format specified"
   exit ERROR_CODE
 end
