@@ -114,6 +114,7 @@ elsif /(pdf)/i.match options[:format]
   temp = Tempfile.new 'Marx'
   File.open(temp.path, 'w') { |f| f.write(html_data) }
   `cat #{temp.path} | #{PDF} --page-size Letter #{ARGV.join ' '} - - > #{output.gsub(/\s/, '\ ')}`
+  temp.close!
 else
   puts "Error: No output format specified"
   exit ERROR_CODE
