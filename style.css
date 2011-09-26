@@ -1,0 +1,41 @@
+body {
+    font-family: "Lucida Grande", sans-serif;
+    font-size: 11pt;
+}
+
+h1 {
+    font-size: 20pt;
+    /*text-shadow: #ddd 2px 3px 3px;*/
+}
+
+blockquote {
+    /*border-left: 4px solid #E6E5DD;*/
+    background-color: #f0f0f0;
+    padding-left: 1em;
+}
+
+code {
+    color: #1C360C;
+}
+
+pre {
+    background-color: #f0f0f0;
+    border: 1px solid #cccbba;
+    padding: 20px;
+    white-space: pre-wrap;
+}
+
+hr {
+    color: #bbb;
+    margin: 2px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+    background-color: #bbb;
+    height: 1px;
+    border: 0px;
+}
+
+pre, code, tt {
+    font-family: "Monaco", monospace;
+    font-size: 11pt;
+}
