@@ -14,10 +14,6 @@ blockquote {
     padding-left: 1em;
 }
 
-code {
-    color: #1C360C;
-}
-
 pre {
     background-color: #f0f0f0;
     border: 1px solid #cccbba;
@@ -38,4 +34,17 @@ hr {
 pre, code, tt {
     font-family: "Monaco", monospace;
     font-size: 11pt;
+}
+
+code {
+    color: #1C360C;
+    font-size: 10pt;
+}
+
+p.pagebreak {
+    page-break-before: always;
+}
+
+img {
+    max-width: 100%;
 }
